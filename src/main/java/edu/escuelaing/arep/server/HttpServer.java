@@ -1,13 +1,11 @@
 package edu.escuelaing.arep.server;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.*;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class HttpServer {
@@ -139,41 +137,40 @@ public class HttpServer {
         }
     }
 
-    private JSONObject consulta (String city) throws IOException {
-        //URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=d4a287f4fdd9cfea36f8265c35be577e");
-        //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        return readJsonFromUrl("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=d4a287f4fdd9cfea36f8265c35be577e");
-    }
+    private String consulta (String city) throws IOException {
+        String ret = "";
+        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=d4a287f4fdd9cfea36f8265c35be577e");
+        URLConnection urlConnection = url.openConnection();
 
-    public JSONObject readJsonFromUrl(String link) throws IOException, JSONException {
-        InputStream input = new URL(link).openStream();
-        // Input Stream Object To Start Streaming.
-        try {                                 // try catch for checked exception
-            BufferedReader re = new BufferedReader(new InputStreamReader(input, Charset.forName("UTF-8")));
-            // Buffer Reading In UTF-8
-            String Text = Read(re);         // Handy Method To Read Data From BufferReader
-            JSONObject json = new JSONObject(Text);    //Creating A JSON
-            return json;    // Returning JSON
-        } catch (Exception e) {
-            return null;
-        } finally {
-            input.close();
+        Map<String, List<String>> headers = urlConnection.getHeaderFields();
+
+        Set<Map.Entry<String, List<String>>> entrySet = headers.entrySet();
+        for (Map.Entry<String, List<String>> entry : entrySet) {
+            String headerName = entry.getKey();
+            if(headerName !=null){System.out.print(headerName + ":");}
+            List<String> headerValues = entry.getValue();
+            for (String value : headerValues) {
+                System.out.print(value);
+            }
+            System.out.println("");
         }
-    }
 
-    public String Read(Reader re) throws IOException {     // class Declaration
-        StringBuilder str = new StringBuilder();     // To Store Url Data In String.
-        int temp;
-        do {
+        System.out.println("-------message-body------");
+        BufferedReader reader =
+                new BufferedReader(new
+                        InputStreamReader(urlConnection.getInputStream()));
 
-            temp = re.read();       //reading Charcter By Chracter.
-            str.append((char) temp);
 
-        } while (temp != -1);
-        //  re.read() return -1 when there is end of buffer , data or end of file.
+        System.out.println("___________________");
 
-        return str.toString();
-
-    }
-
-}
+        try (BufferedReader nreader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            String inputLine = null;
+            while ((inputLine = nreader.readLine()) != null) {
+                ret += inputLine;
+                System.out.println(inputLine);
+            }
+        } catch (IOException x) {
+            System.err.println(x);
+        }
+        return ret;
+    }}
