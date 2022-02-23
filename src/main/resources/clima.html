@@ -1,15 +1,41 @@
-<!DOCTYPE html>"
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset=\"UTF-8\">
 <title>Title of the document</title>
+    <script type="text/javascript">
+    const link = 'https://arepparcial01.herokuapp.com/consulta?ciudad=';
+    const button = document.getElementById('mainButton');
+    const stringInput = document.getElementById('city');
+    const resultText = document.getElementById('resultText');
+
+    function callRequest(){
+        stringInput.value();
+    }
+
+    function setListeners(){
+        button.addEventListener('click', get);
+    }
+    return{
+        callApi: async getCall => {
+            return await fetch(´${link}${stringInput.value()}´).then(
+                result => {
+                    return result.json();
+                }
+            );
+        }
+    }
+    </script>
 </head>
 <body>
-<input>
+<input
+id="city">
     Introduce el nombre de la ciudad.
 </input>
-<button>
+<button
+id="mainbutton">
 Obtener clima
 </button>
+<h2 id="resulText"></h2>
 </body>
 </html>

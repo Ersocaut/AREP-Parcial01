@@ -1,9 +1,14 @@
 package edu.escuelaing.arep.server;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.*;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class HttpServer {
 
@@ -85,6 +90,7 @@ public class HttpServer {
             }
 
             if (file.startsWith("/clima")){
+                String value;
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type: text/html\r\n"
                         + "\r\n"
@@ -102,25 +108,21 @@ public class HttpServer {
                         + "</button>"
                         + "</body>"
                         + "</html>";
+
             }else if (file.startsWith("/consulta")){
+
+                System.out.println("ciudad: " + file.split("=")[1]);
+
                 outputLine = "HTTP/1.1 200 OK\r\n"
-                        + "Content-Type: text/html\r\n"
+                        + "Content-Type: application/json\r\n"
                         + "\r\n"
-                        + "<!DOCTYPE html>"
-                        + "<html>"
-                        + "<head>"
-                        + "<meta charset=\"UTF-8\">"
-                        + "<title>Title of the document</title>\n"
-                        + "</head>"
-                        + "<body>"
-                        + "Consulta"
-                        + "</body>"
-                        + "</html>";
+                        + consulta(file.split("=")[1]);
+
             }else{
                 outputLine = defaultPage;
             }
+                out.println(outputLine);
 
-            out.println(outputLine);
 
             closeConnection();
         }
@@ -136,4 +138,42 @@ public class HttpServer {
             e.printStackTrace();
         }
     }
+
+    private JSONObject consulta (String city) throws IOException {
+        //URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=d4a287f4fdd9cfea36f8265c35be577e");
+        //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        return readJsonFromUrl("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=d4a287f4fdd9cfea36f8265c35be577e");
+    }
+
+    public JSONObject readJsonFromUrl(String link) throws IOException, JSONException {
+        InputStream input = new URL(link).openStream();
+        // Input Stream Object To Start Streaming.
+        try {                                 // try catch for checked exception
+            BufferedReader re = new BufferedReader(new InputStreamReader(input, Charset.forName("UTF-8")));
+            // Buffer Reading In UTF-8
+            String Text = Read(re);         // Handy Method To Read Data From BufferReader
+            JSONObject json = new JSONObject(Text);    //Creating A JSON
+            return json;    // Returning JSON
+        } catch (Exception e) {
+            return null;
+        } finally {
+            input.close();
+        }
+    }
+
+    public String Read(Reader re) throws IOException {     // class Declaration
+        StringBuilder str = new StringBuilder();     // To Store Url Data In String.
+        int temp;
+        do {
+
+            temp = re.read();       //reading Charcter By Chracter.
+            str.append((char) temp);
+
+        } while (temp != -1);
+        //  re.read() return -1 when there is end of buffer , data or end of file.
+
+        return str.toString();
+
+    }
+
 }
