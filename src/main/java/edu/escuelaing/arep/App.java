@@ -12,7 +12,6 @@ import java.net.URISyntaxException;
 public class App 
 {
     public static void main( String[] args ) throws IOException, URISyntaxException {
-        System.out.println( "Hello World!");
         HttpServer serv = new HttpServer();
         serv.start();
     }
