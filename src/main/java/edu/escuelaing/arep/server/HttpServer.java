@@ -2,11 +2,8 @@ package edu.escuelaing.arep.server;
 
 import java.net.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static edu.escuelaing.arep.utils.Constants.TYPE;
 
 public class HttpServer {
 
@@ -40,6 +37,14 @@ public class HttpServer {
 
     public HttpServer(){
     }
+
+    private static int getPort() {
+        if (System.getenv("PORT") != null) {
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 4567;
+    }
+
 
     public void start() throws IOException, URISyntaxException {
 
