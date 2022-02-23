@@ -44,12 +44,10 @@ public class HttpServer {
 
     public void start() throws IOException, URISyntaxException {
 
-        getPort();
-
         serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(35000);
+            serverSocket = new ServerSocket(getPort());
         } catch (IOException e) {
             System.err.println("Could not listen on port: 35000.");
             System.exit(1);
