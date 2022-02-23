@@ -84,7 +84,7 @@ public class HttpServer {
                 }
             }
 
-            if (file.startsWith("/Clima")){
+            if (file.startsWith("/clima")){
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type: text/html\r\n"
                         + "\r\n"
@@ -102,7 +102,7 @@ public class HttpServer {
                         + "</button>"
                         + "</body>"
                         + "</html>";
-            }else if (file.startsWith("/Consulta")){
+            }else if (file.startsWith("/consulta")){
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type: text/html\r\n"
                         + "\r\n"
