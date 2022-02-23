@@ -48,6 +48,8 @@ public class HttpServer {
 
     public void start() throws IOException, URISyntaxException {
 
+        getPort();
+
         serverSocket = null;
 
         try {
