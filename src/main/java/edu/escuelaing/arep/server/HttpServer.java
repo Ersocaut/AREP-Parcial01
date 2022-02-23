@@ -23,11 +23,7 @@ public class HttpServer {
             + "<title>Title of the document</title>\n"
             + "</head>"
             + "<body>"
-            + "<input>"
-            + "</input>"
-            + "<button>"
-            + "Obtener clima"
-            + "</button>"
+            + "Servicio por defecto funcionando"
             + "</body>"
             + "</html>";
 
@@ -81,12 +77,50 @@ public class HttpServer {
 
             while ((inputLine = in.readLine()) != null) {
                 System.out.println("Received: " + inputLine);
+                if (primeraLinea){
+                    file = inputLine.split(" ")[1];
+                    primeraLinea = false;
+                }
                 if (!in.ready()) {
                     break;
                 }
             }
 
-            outputLine = defaultPage;
+            if (file.startsWith("/Clima")){
+                outputLine = "HTTP/1.1 200 OK\r\n"
+                        + "Content-Type: text/html\r\n"
+                        + "\r\n"
+                        + "<!DOCTYPE html>"
+                        + "<html>"
+                        + "<head>"
+                        + "<meta charset=\"UTF-8\">"
+                        + "<title>Title of the document</title>\n"
+                        + "</head>"
+                        + "<body>"
+                        + "<input>"
+                        + "</input>"
+                        + "<button>"
+                        + "Obtener clima"
+                        + "</button>"
+                        + "</body>"
+                        + "</html>";
+            }else if (file.startsWith("/Consulta")){
+                outputLine = "HTTP/1.1 200 OK\r\n"
+                        + "Content-Type: text/html\r\n"
+                        + "\r\n"
+                        + "<!DOCTYPE html>"
+                        + "<html>"
+                        + "<head>"
+                        + "<meta charset=\"UTF-8\">"
+                        + "<title>Title of the document</title>\n"
+                        + "</head>"
+                        + "<body>"
+                        + "Consulta"
+                        + "</body>"
+                        + "</html>";
+            }else{
+                outputLine = defaultPage;
+            }
 
             out.println(outputLine);
 
